@@ -40,11 +40,12 @@ const Calendar = () => {
     const [month, setMonth] = useState(months[today.getMonth()])
 
     const [year, setYear] = useState(today.getFullYear())
+
  
     const firstDay = new Date(`${month}/${year}`);
-    const dayName = days[firstDay.getDay()];
+    const firstDayName = days[firstDay.getDay()];
 
-    console.log(dayName)
+    console.log(firstDayName)
 
     const monthfirstdate = (y, m) => {
         return new Date(y, m + 1, 1).getDate();
@@ -54,13 +55,44 @@ const Calendar = () => {
         return new Date(y, m + 1, 0).getDate();
     }
 
-    console.log(monthlastdate(year, months.indexOf(month)))
+    const lastDay = new Date(`${month}/${monthlastdate(year, months.indexOf(month))}/${year}`);
+    const lastDayName = days[lastDay.getDay()];
+
+    console.log(lastDayName)
+
+    const daysInMonthFunction = () => {
+
+        const numberDaysInPreviousMonth = days.indexOf(firstDayName)
+        const Nprevious = (monthlastdate(year, (months.indexOf(month) - 1)))
+        console.log(Nprevious)
+        const daysInMonthPrevious = Array.from(Array(Nprevious), (_, index) => index + 1)
+        const daysDisplayedFromPreviousMonth = daysInMonthPrevious.slice(Nprevious-numberDaysInPreviousMonth)
+        console.log(daysDisplayedFromPreviousMonth)
+
+        const N = (monthlastdate(year, months.indexOf(month)))
+        const daysInMonth = Array.from(Array(N), (_, index) => index + 1)
+        console.log(daysInMonth)
+
+        const numberDaysInNextMonth = (days.length - days.indexOf(lastDayName) - 1 )
+        console.log(days.length-days.indexOf(lastDayName)-1)
+        const Nnext = (monthlastdate(year, (months.indexOf(month) + 1)))
+        const daysInMonthNext = Array.from(Array(Nnext), (_, index) => index + 1)
+        const daysDisplayedFromNextMonth = daysInMonthNext.slice(0, numberDaysInNextMonth)
+        console.log(daysDisplayedFromNextMonth)
+        
+        const daysDisplayedFromNextMonth2 = daysInMonthNext.slice(0, (numberDaysInNextMonth+ (42 - (daysDisplayedFromPreviousMonth.length + daysInMonth.length +daysDisplayedFromNextMonth.length))))
 
 
-    // var firstDay1 = new Date(year, month, 1);
-    // var lastDay1 = new Date(year, month + 1, 0);
+            const newMonthLayout = [...daysDisplayedFromPreviousMonth, ...daysInMonth, ...daysDisplayedFromNextMonth2]
+            return newMonthLayout
 
-    // console.log(lastDay1, firstDay1)
+    }
+
+    console.log(daysInMonthFunction())
+
+
+    console.log(days.indexOf(firstDayName))
+
 
     const changeDateFunctionLeft = (event) => {
         event.preventDefault();
@@ -80,29 +112,8 @@ const Calendar = () => {
         }
     }
 
-    const number = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
 
-    console.log(days.indexOf(dayName))
 
-    console.log(number)
-    console.log(firstDay)
-    console.log(dayName)
-    console.log(days.indexOf(dayName))
-
-    console.log(monthfirstdate(year, months.indexOf(month)))
-    console.log(monthlastdate(year, months.indexOf(month)))
-
-    const daysInTheMonth = []
-
-    
-
-    // const dateOnCalender = () => {
-    //     if(number[index-(days.indexOf(dayName))] - (monthlastdate(year, months.indexOf(month))) + (monthlastdate(year, months.indexOf(month))) < 0)
-    //     return number[index-(days.indexOf(dayName))] - (monthlastdate(year, months.indexOf(month))) + (monthlastdate(year, months.indexOf(month)))
-    //     else{
-    //         return null
-    //     }
-    // }
 
     return (
         <>
@@ -133,11 +144,11 @@ const Calendar = () => {
     <DatesContainer>
             <Dates>
                 <Grid>
-                {dates.map((element, index) => {
+                {daysInMonthFunction().map((element) => {
                 return(
                     <>
                         <Box>
-                            <Circle>{}</Circle>
+                            <Circle>{element}</Circle>
                         </Box>
                     </>
                 )
@@ -170,18 +181,19 @@ background-color: orange;
 
 const Container = styled.div`
 box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+display: flex;
+flex-direction: row;
+justify-content: center;
     /* padding-top: 8rem; */
 `
 
 const DayOfWeek = styled.div`
-font-size: 2rem;
+font-size: 1.25rem;
+font-weight: bold;
 color: black;
 border: 0.1rem solid black;
-padding: 2rem;
-width: 125px;
+padding: 1rem;
+width: 100px;
 display: flex;
 justify-content: center;
 align-items: center;
@@ -205,15 +217,15 @@ const Top = styled.div`
 const Grid = styled.div`
 display: grid;
 grid-template-columns: auto auto auto auto auto auto auto;
-padding: 1rem;
+padding-bottom: 1.5rem;
 `
 
 const Box = styled.div`
 border: 0.1rem solid black;
-width: 125px;
-font-size: 2rem;
+width: 100px;
+font-size: 1rem;
 color: black;
-padding: 2rem;
+padding: 1rem;
 overflow: hidden;
 display: flex;
 justify-content: end;
@@ -222,9 +234,13 @@ justify-content: end;
 
 
 const Circle = styled.button`
+font-size: 1rem;
+display: flex;
+align-items: center;
+justify-content: center;
 border-radius: 50%;
-height: 3rem;
-width: 3rem;
+height: 2.25rem;
+width: 2.25rem;
 background-color: transparent;
 
 &:hover{
@@ -243,6 +259,10 @@ const Container1 = styled.div`
 const Header = styled.h1`
 color: black;
 font-size: 3.5rem;
+width: 30rem;
+display:flex;
+align-items: center;
+justify-content: center;
 `
 
 const Form = styled.form`
@@ -253,7 +273,7 @@ align-items: center;
 `
 
 const Button = styled.button`
-margin: 0 10rem;
+margin: 0 7rem;
 display: flex;
 font-size: 3.5rem; 
 color: black;

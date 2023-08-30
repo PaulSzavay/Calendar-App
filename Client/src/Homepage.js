@@ -29,7 +29,7 @@ background-color: green;
 display: flex;
 justify-content: center;
 align-items: center;
-height: 107vh;
+height: 107.7vh;
 margin-top: -10rem;
 `
 
