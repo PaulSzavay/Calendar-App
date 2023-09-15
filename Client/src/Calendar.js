@@ -3,6 +3,7 @@ import CalendarHeader from "./CalendarHeader";
 import { BsArrowLeftCircle } from "react-icons/bs";
 import { BsArrowRightCircle } from "react-icons/bs";
 import { useEffect, useState } from "react";
+import {useNavigate} from "react-router-dom";
 
 
 const days = [
@@ -41,11 +42,13 @@ const Calendar = () => {
 
     const [year, setYear] = useState(today.getFullYear())
 
+    const navigate = useNavigate()
+
  
     const firstDay = new Date(`${month}/${year}`);
     const firstDayName = days[firstDay.getDay()];
 
-    console.log(firstDayName)
+    // console.log(firstDayName)
 
     const monthfirstdate = (y, m) => {
         return new Date(y, m + 1, 1).getDate();
@@ -58,27 +61,27 @@ const Calendar = () => {
     const lastDay = new Date(`${month}/${monthlastdate(year, months.indexOf(month))}/${year}`);
     const lastDayName = days[lastDay.getDay()];
 
-    console.log(lastDayName)
+    // console.log(lastDayName)
 
     const daysInMonthFunction = () => {
 
         const numberDaysInPreviousMonth = days.indexOf(firstDayName)
         const Nprevious = (monthlastdate(year, (months.indexOf(month) - 1)))
-        console.log(Nprevious)
+        // console.log(Nprevious)
         const daysInMonthPrevious = Array.from(Array(Nprevious), (_, index) => index + 1)
         const daysDisplayedFromPreviousMonth = daysInMonthPrevious.slice(Nprevious-numberDaysInPreviousMonth)
-        console.log(daysDisplayedFromPreviousMonth)
+        // console.log(daysDisplayedFromPreviousMonth)
 
         const N = (monthlastdate(year, months.indexOf(month)))
         const daysInMonth = Array.from(Array(N), (_, index) => index + 1)
-        console.log(daysInMonth)
+        // console.log(daysInMonth)
 
         const numberDaysInNextMonth = (days.length - days.indexOf(lastDayName) - 1 )
-        console.log(days.length-days.indexOf(lastDayName)-1)
+        // console.log(days.length-days.indexOf(lastDayName)-1)
         const Nnext = (monthlastdate(year, (months.indexOf(month) + 1)))
         const daysInMonthNext = Array.from(Array(Nnext), (_, index) => index + 1)
         const daysDisplayedFromNextMonth = daysInMonthNext.slice(0, numberDaysInNextMonth)
-        console.log(daysDisplayedFromNextMonth)
+        // console.log(daysDisplayedFromNextMonth)
         
         const daysDisplayedFromNextMonth2 = daysInMonthNext.slice(0, (numberDaysInNextMonth+ (42 - (daysDisplayedFromPreviousMonth.length + daysInMonth.length +daysDisplayedFromNextMonth.length))))
 
@@ -88,10 +91,10 @@ const Calendar = () => {
 
     }
 
-    console.log(daysInMonthFunction())
+    // console.log(daysInMonthFunction())
 
 
-    console.log(days.indexOf(firstDayName))
+    // console.log(days.indexOf(firstDayName))
 
 
     const changeDateFunctionLeft = (event) => {
@@ -112,8 +115,29 @@ const Calendar = () => {
         }
     }
 
+    console.log(month)
 
-
+    const buttonFunction = (element, index) => {
+        if(element-index > 15){
+            if(month === "January"){
+                navigate(`/Date?year=${year-1}&month=${months[11]}&date=${element}`)
+            }
+            else{
+                navigate(`/Date?year=${year}&month=${months[months.indexOf(month)-1]}&date=${element}`)
+            }
+        }
+        else if(index-element > 15){
+            if(month === "December"){
+                navigate(`/Date?year=${year+1}&month=${months[0]}&date=${element}`)
+            }
+            else{
+                navigate(`/Date?year=${year}&month=${months[months.indexOf(month)+1]}&date=${element}`)
+            }
+        }        
+        else{
+            navigate(`/Date?year=${year}&month=${month}&date=${element}`)
+        }
+    }
 
     return (
         <>
@@ -144,11 +168,11 @@ const Calendar = () => {
     <DatesContainer>
             <Dates>
                 <Grid>
-                {daysInMonthFunction().map((element) => {
+                {daysInMonthFunction().map((element, index) => {
                 return(
                     <>
                         <Box>
-                            <Circle>{element}</Circle>
+                            <Circle onClick={() => buttonFunction(element, index)}>{element}</Circle>
                         </Box>
                     </>
                 )
@@ -184,7 +208,6 @@ box-sizing: border-box;
 display: flex;
 flex-direction: row;
 justify-content: center;
-    /* padding-top: 8rem; */
 `
 
 const DayOfWeek = styled.div`
@@ -250,9 +273,9 @@ background-color: transparent;
 
 
 const Container1 = styled.div`
-    /* display: flex;
+    display: flex;
     flex-direction: row;
-    justify-content: center; */
+    justify-content: center;
 
 `
 
